@@ -1,0 +1,40 @@
+{
+    "name": "vajexal/amp-sqlite",
+    "description": "SQLite client for amphp",
+    "keywords": [
+        "amphp",
+        "sqlite"
+    ],
+    "require": {
+        "php": "^7.4",
+        "ext-pcntl": "*",
+        "ext-sqlite3": "*",
+        "amphp/amp": "^2.5",
+        "amphp/parallel": "^1.4",
+        "amphp/sql": "^1.0",
+        "amphp/sync": "^1.4"
+    },
+    "require-dev": {
+        "amphp/php-cs-fixer-config": "dev-master",
+        "amphp/phpunit-util": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vajexal\\AmpSQLite\\": "src"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vajexal\\AmpSQLite\\Tests\\": "tests"
+        },
+        "files": [
+            "tests/functions.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
