@@ -3,7 +3,7 @@ SQLite client for [amphp](https://amphp.org) using [parallel](https://amphp.org/
 ### Installation
 
 ```bash
-composer install vajexal/amp-sqlite
+composer require vajexal/amp-sqlite:dev-master
 ```
 
 ### Usage
