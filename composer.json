@@ -15,6 +15,7 @@
         "amphp/sync": "^1.4"
     },
     "require-dev": {
+        "ext-parallel": "*",
         "amphp/php-cs-fixer-config": "dev-master",
         "amphp/phpunit-util": "^1.4"
     },
