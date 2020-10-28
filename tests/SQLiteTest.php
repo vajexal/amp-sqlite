@@ -15,7 +15,7 @@ use Vajexal\AmpSQLite\SQLiteStatement;
 use function Amp\call;
 use function Vajexal\AmpSQLite\connect;
 
-class SQLiteTest extends AsyncTestCase
+abstract class SQLiteTest extends AsyncTestCase
 {
     protected function setUpAsync()
     {
