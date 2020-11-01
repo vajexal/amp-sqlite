@@ -2,8 +2,6 @@
 
 namespace Vajexal\AmpSQLite\Tests;
 
-use Amp\PHPUnit\AsyncTestCase;
-use Amp\Promise;
 use Amp\Sql\ConnectionException;
 use Amp\Sql\QueryError;
 use Vajexal\AmpSQLite\Command\Response\CommandResultResponse;
@@ -12,31 +10,19 @@ use Vajexal\AmpSQLite\SQLiteConnection;
 use Vajexal\AmpSQLite\SQLiteDriver;
 use Vajexal\AmpSQLite\SQLiteResultSet;
 use Vajexal\AmpSQLite\SQLiteStatement;
-use function Amp\call;
+use Vajexal\AmpSQLite\Tests\Command\GetStatementsCommand;
 use function Vajexal\AmpSQLite\connect;
 
-abstract class SQLiteTest extends AsyncTestCase
+abstract class SQLiteTest extends TestCase
 {
     protected function setUpAsync()
     {
         $this->setTimeout(5000);
     }
 
-    private function compareResultSets(array $expected, SQLiteResultSet $actual): Promise
-    {
-        return call(function () use ($expected, $actual) {
-            foreach ($expected as $row) {
-                $this->assertTrue(yield $actual->advance());
-                $this->assertEquals($row, $actual->getCurrent());
-            }
-
-            $this->assertFalse(yield $actual->advance());
-        });
-    }
-
     public function testComplex()
     {
-        /** @var SQLiteConnection connection */
+        /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
 
         yield $connection->execute('create table foo (bar text not null)');
@@ -50,8 +36,8 @@ abstract class SQLiteTest extends AsyncTestCase
 
         /** @var SQLiteStatement $statement */
         $statement = yield $connection->prepare('select * from foo where bar = :bar');
-        $results = yield $statement->execute([
-            ':bar' => 'test'
+        $results   = yield $statement->execute([
+            ':bar' => 'test',
         ]);
         yield $this->compareResultSets([['bar' => 'test']], $results);
 
@@ -60,19 +46,19 @@ abstract class SQLiteTest extends AsyncTestCase
 
     public function testUpdateRowsCount()
     {
-        /** @var SQLiteConnection connection */
+        /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
 
         yield $connection->execute('create table foo (bar text)');
         /** @var SQLiteCommandResult $result */
         $result = yield $connection->execute('insert into foo (bar) values (:bar)', [
-            ':bar' => 'test'
+            ':bar' => 'test',
         ]);
         $this->assertEquals(1, $result->getAffectedRowCount());
 
         /** @var SQLiteCommandResult $result */
         $result = yield $connection->execute('update foo set bar = :bar', [
-            ':bar' => 'another test'
+            ':bar' => 'another test',
         ]);
         $this->assertEquals(1, $result->getAffectedRowCount());
 
@@ -90,7 +76,7 @@ abstract class SQLiteTest extends AsyncTestCase
         $this->expectException(ConnectionException::class);
         $this->expectExceptionMessage('Process unexpectedly exited');
 
-        /** @var SQLiteConnection connection */
+        /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
         $connection->close();
         yield $connection->query('select 1');
@@ -101,7 +87,7 @@ abstract class SQLiteTest extends AsyncTestCase
         $this->expectException(QueryError::class);
         $this->expectExceptionMessage('near "foo": syntax error');
 
-        /** @var SQLiteConnection connection */
+        /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
         yield $connection->query('foo');
     }
@@ -119,15 +105,15 @@ abstract class SQLiteTest extends AsyncTestCase
 
     public function testStatementsDestruction()
     {
-        /** @var SQLiteConnection connection */
+        /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
 
         yield $connection->execute('create table foo (bar text not null)');
 
         /** @var SQLiteStatement $statement */
         $statement = yield $connection->prepare('select * from foo where bar = :bar');
-        $results = yield $statement->execute([
-            ':bar' => 'test'
+        $results   = yield $statement->execute([
+            ':bar' => 'test',
         ]);
         yield $this->compareResultSets([], $results);
 
@@ -144,7 +130,7 @@ abstract class SQLiteTest extends AsyncTestCase
 
     public function testBlob()
     {
-        /** @var SQLiteConnection connection */
+        /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
 
         yield $connection->execute('create table foo (bar blob)');
@@ -152,7 +138,7 @@ abstract class SQLiteTest extends AsyncTestCase
         $str = \random_bytes(2 * 1024 * 1024);
 
         $result = yield $connection->execute('insert into foo (bar) values (:bar)', [
-            ':bar' => $str
+            ':bar' => $str,
         ]);
         $this->assertEquals(1, $result->getAffectedRowCount());
 

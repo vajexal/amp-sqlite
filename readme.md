@@ -45,5 +45,39 @@ Loop::run(function () {
     ]);
     echo "Updated {$result->getAffectedRowCount()} rows\n";
 });
+```
 
+#### Transactions
+
+```php
+<?php
+
+use Amp\Loop;
+use Vajexal\AmpSQLite\SQLiteConnection;
+use Vajexal\AmpSQLite\SQLiteTransaction;
+use function Vajexal\AmpSQLite\connect;
+
+require_once 'vendor/autoload.php';
+
+Loop::run(function () {
+    /** @var SQLiteConnection $connection */
+    $connection = yield connect('database.sqlite');
+
+    yield $connection->execute('drop table if exists users');
+    yield $connection->execute('create table users (id integer primary key, name text not null)');
+
+    /** @var SQLiteTransaction $transaction */
+    $transaction = yield $connection->beginTransaction();
+    yield $transaction->execute('insert into users (name) values (:name)', [
+        ':name' => 'Bob',
+    ]);
+
+    yield $transaction->createSavepoint('change_name');
+    yield $transaction->execute('update users set name = :name where id = 1', [
+        ':name' => 'John',
+    ]);
+    yield $transaction->releaseSavepoint('change_name');
+
+    yield $transaction->commit();
+});
 ```

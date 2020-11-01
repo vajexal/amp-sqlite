@@ -6,14 +6,15 @@ use Amp\Parallel\Context\StatusError;
 use Amp\Parallel\Sync\SynchronizationError;
 use Amp\Promise;
 use Amp\Sql\ConnectionException;
-use Amp\Sql\Executor;
+use Amp\Sql\Link;
+use LogicException;
 use Throwable;
 use Vajexal\AmpSQLite\Command\ExecuteCommand;
 use Vajexal\AmpSQLite\Command\PrepareCommand;
 use Vajexal\AmpSQLite\Command\QueryCommand;
 use function Amp\call;
 
-class SQLiteConnection implements Executor
+class SQLiteConnection implements Link
 {
     use SQLiteResultFactory;
 
@@ -83,6 +84,23 @@ class SQLiteConnection implements Executor
             } catch (StatusError | SynchronizationError $e) {
                 throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
             }
+        });
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Throwable
+     */
+    public function beginTransaction(int $isolation = SQLiteTransaction::ISOLATION_DEFERRED): Promise
+    {
+        return call(function () use ($isolation) {
+            if (empty(SQLiteTransaction::ISOLATION_MAP[$isolation])) {
+                throw new LogicException("Invalid isolation level {$isolation}");
+            }
+
+            yield $this->execute('BEGIN ' . SQLiteTransaction::ISOLATION_MAP[$isolation]);
+
+            return new SQLiteTransaction($this, $isolation);
         });
     }
 
