@@ -44,7 +44,7 @@ class SQLiteDriver implements TransientResource
         return call(function () use ($filename, $flags, $encryptionKey) {
             $driver = new self;
 
-            $driver->context = yield Context\run(__DIR__ . DIRECTORY_SEPARATOR . 'sqlite-process.php');
+            $driver->context = yield Context\run(__DIR__ . DIRECTORY_SEPARATOR . 'sqlite-worker.php');
             $request = new OpenConnectionRequest($filename, $flags, $encryptionKey);
             yield $driver->context->send($request);
 
