@@ -17,9 +17,6 @@ jobs:
     container: php:${{ matrix.php }}-zts
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Setup PHP
         run: |
           apt update -y
@@ -27,6 +24,9 @@ jobs:
           docker-php-ext-install pcntl zip
           pecl install parallel && docker-php-ext-enable parallel || true
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Get composer cache directory
         id: composer-cache
