@@ -1,5 +1,7 @@
 SQLite client for [amphp](https://amphp.org) using [parallel](https://amphp.org/parallel/)
 
+[![Build Status](https://github.com/vajexal/amp-sqlite/workflows/Build/badge.svg)](https://github.com/vajexal/amp-sqlite/actions)
+
 ### Installation
 
 ```bash
