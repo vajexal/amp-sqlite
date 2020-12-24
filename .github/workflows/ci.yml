@@ -23,8 +23,8 @@ jobs:
       - name: Setup PHP
         run: |
           apt update -y
-          apt install -y git curl
-          docker-php-ext-install pcntl
+          apt install -y git curl zip libzip-dev
+          docker-php-ext-install pcntl zip
           pecl install parallel && docker-php-ext-enable parallel || true
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
