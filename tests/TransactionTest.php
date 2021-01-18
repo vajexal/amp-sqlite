@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Vajexal\AmpSQLite\Tests;
 
 use Amp\Loop;
+use Amp\Sql\ConnectionException;
 use Amp\Sql\QueryError;
 use Amp\Sql\Transaction;
 use Amp\Sql\TransactionError;
@@ -165,6 +166,22 @@ class TransactionTest extends TestCase
         yield $transaction->commit();
 
         yield $transaction->query('select 1');
+    }
+
+    public function testUsingTransactionWithClosedConnection()
+    {
+        $this->expectException(ConnectionException::class);
+        $this->expectExceptionMessage('Process unexpectedly exited');
+
+        /** @var SQLiteConnection $connection */
+        $connection = yield connect(':memory:');
+
+        /** @var SQLiteTransaction $transaction */
+        $transaction = yield $connection->beginTransaction();
+
+        $connection->close();
+
+        yield $transaction->commit();
     }
 
     public function testOpenFewTransactions()

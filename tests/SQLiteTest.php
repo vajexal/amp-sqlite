@@ -84,6 +84,26 @@ abstract class SQLiteTest extends TestCase
         yield $connection->query('select 1');
     }
 
+    public function testUsingStatementWithClosedConnection()
+    {
+        $this->expectException(ConnectionException::class);
+        $this->expectExceptionMessage('Process unexpectedly exited');
+
+        /** @var SQLiteConnection $connection */
+        $connection = yield connect(':memory:');
+
+        yield $connection->execute('create table foo (bar text not null)');
+
+        /** @var SQLiteStatement $statement */
+        $statement = yield $connection->prepare('select * from foo where bar = :bar');
+
+        $connection->close();
+
+        yield $statement->execute([
+            ':bar' => 'test',
+        ]);
+    }
+
     public function testBadQuery()
     {
         $this->expectException(QueryError::class);
