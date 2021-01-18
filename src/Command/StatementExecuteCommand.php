@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Vajexal\AmpSQLite\Command;
 
 use Amp\Promise;
-use LogicException;
-use Vajexal\AmpSQLite\Command\Response\ErrorResponse;
+use Vajexal\AmpSQLite\Command\Response\FailureExceptionResponse;
 use Vajexal\AmpSQLite\Environment\Environment;
 use function Amp\call;
 
@@ -32,7 +31,7 @@ class StatementExecuteCommand implements Command
             $statement = $environment->getStatement($this->statementId);
 
             if (!$statement) {
-                return new ErrorResponse(LogicException::class, "could not find statement {$this->statementId}");
+                return new FailureExceptionResponse("could not find statement {$this->statementId}");
             }
 
             $this->addBindings($statement);

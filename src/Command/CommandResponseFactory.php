@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Vajexal\AmpSQLite\Command;
 
-use Amp\Sql\QueryError;
 use Vajexal\AmpSQLite\Command\Response\CommandResultResponse;
-use Vajexal\AmpSQLite\Command\Response\ErrorResponse;
+use Vajexal\AmpSQLite\Command\Response\QueryErrorResponse;
 use Vajexal\AmpSQLite\Command\Response\ResultSetResponse;
 use Vajexal\AmpSQLite\Environment\Environment;
 
@@ -15,12 +14,12 @@ trait CommandResponseFactory
     /**
      * @param \SQLite3Result|bool $results
      * @param Environment $environment
-     * @return CommandResultResponse|ErrorResponse|ResultSetResponse
+     * @return CommandResultResponse|QueryErrorResponse|ResultSetResponse
      */
     private function createQueryResponse($results, Environment $environment)
     {
         if (!$results) {
-            return new ErrorResponse(QueryError::class, $environment->getClient()->lastErrorMsg());
+            return new QueryErrorResponse($environment->getClient()->lastErrorMsg());
         }
 
         // https://www.php.net/manual/ru/sqlite3result.fetcharray.php#120631

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Vajexal\AmpSQLite;
 
 use Amp\Promise;
+use Amp\Sql\ConnectionException;
+use Amp\Sql\FailureException;
+use Amp\Sql\QueryError;
 use Amp\Sql\Transaction;
 use Amp\Sql\TransactionError;
 use InvalidArgumentException;
-use Throwable;
 
 class SQLiteTransaction implements Transaction
 {
@@ -40,7 +42,7 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
      */
     public function query(string $sql): Promise
     {
@@ -53,7 +55,7 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
      */
     public function prepare(string $sql): Promise
     {
@@ -66,7 +68,7 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
      */
     public function execute(string $sql, array $params = []): Promise
     {
@@ -105,7 +107,10 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
+     * @throws ConnectionException
+     * @throws FailureException
+     * @throws QueryError
      */
     public function commit(): Promise
     {
@@ -120,7 +125,10 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
+     * @throws ConnectionException
+     * @throws FailureException
+     * @throws QueryError
      */
     public function rollback(): Promise
     {
@@ -135,7 +143,10 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
+     * @throws ConnectionException
+     * @throws FailureException
+     * @throws QueryError
      */
     public function createSavepoint(string $identifier): Promise
     {
@@ -150,7 +161,10 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
+     * @throws ConnectionException
+     * @throws FailureException
+     * @throws QueryError
      */
     public function rollbackTo(string $identifier): Promise
     {
@@ -165,7 +179,10 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws TransactionError
+     * @throws ConnectionException
+     * @throws FailureException
+     * @throws QueryError
      */
     public function releaseSavepoint(string $identifier): Promise
     {
@@ -180,7 +197,6 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @param string $identifier
-     * @throws InvalidArgumentException
      */
     private function validateSavepointIdentifier(string $identifier)
     {

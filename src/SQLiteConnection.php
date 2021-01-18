@@ -8,9 +8,10 @@ use Amp\Parallel\Context\StatusError;
 use Amp\Parallel\Sync\SynchronizationError;
 use Amp\Promise;
 use Amp\Sql\ConnectionException;
+use Amp\Sql\FailureException;
 use Amp\Sql\Link;
-use LogicException;
-use Throwable;
+use Amp\Sql\QueryError;
+use InvalidArgumentException;
 use Vajexal\AmpSQLite\Command\ExecuteCommand;
 use Vajexal\AmpSQLite\Command\PrepareCommand;
 use Vajexal\AmpSQLite\Command\QueryCommand;
@@ -34,7 +35,6 @@ class SQLiteConnection implements Link
 
     /**
      * @inheritDoc
-     * @throws Throwable
      */
     public function query(string $sql): Promise
     {
@@ -53,7 +53,6 @@ class SQLiteConnection implements Link
 
     /**
      * @inheritDoc
-     * @throws Throwable
      */
     public function prepare(string $sql): Promise
     {
@@ -72,7 +71,6 @@ class SQLiteConnection implements Link
 
     /**
      * @inheritDoc
-     * @throws Throwable
      */
     public function execute(string $sql, array $params = []): Promise
     {
@@ -91,13 +89,15 @@ class SQLiteConnection implements Link
 
     /**
      * @inheritDoc
-     * @throws Throwable
+     * @throws ConnectionException
+     * @throws FailureException
+     * @throws QueryError
      */
     public function beginTransaction(int $isolation = SQLiteTransaction::ISOLATION_DEFERRED): Promise
     {
         return call(function () use ($isolation) {
             if (empty(SQLiteTransaction::ISOLATION_MAP[$isolation])) {
-                throw new LogicException("Invalid isolation level {$isolation}");
+                throw new InvalidArgumentException("Invalid isolation level {$isolation}");
             }
 
             yield $this->execute('BEGIN ' . SQLiteTransaction::ISOLATION_MAP[$isolation]);

@@ -9,7 +9,6 @@ use Amp\Parallel\Sync\SynchronizationError;
 use Amp\Promise;
 use Amp\Sql\ConnectionException;
 use Amp\Sql\Statement;
-use Throwable;
 use Vajexal\AmpSQLite\Command\StatementCloseCommand;
 use Vajexal\AmpSQLite\Command\StatementExecuteCommand;
 use function Amp\call;
@@ -36,7 +35,6 @@ class SQLiteStatement implements Statement
 
     /**
      * @inheritDoc
-     * @throws Throwable
      */
     public function execute(array $params = []): Promise
     {
