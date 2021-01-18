@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite;
 
 use Amp\Parallel\Sync\Channel;
@@ -14,7 +16,7 @@ return function (Channel $channel): Generator {
 
     \assert($request instanceof OpenConnectionRequest);
 
-    $client = new SQLite3($request->getFilename(), $request->getFlags(), $request->getEncryptionKey());
+    $client      = new SQLite3($request->getFilename(), $request->getFlags(), $request->getEncryptionKey());
     $environment = new Environment($client);
 
     try {

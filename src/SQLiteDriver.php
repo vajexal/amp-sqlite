@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite;
 
 use Amp\Parallel\Context;
@@ -20,8 +22,8 @@ class SQLiteDriver implements TransientResource
     private const CONTEXT_CLOSE_TIMEOUT = 50;
 
     private Context\Context $context;
-    private int $lastUsedAt = 0;
-    private Mutex $mutex;
+    private int             $lastUsedAt = 0;
+    private Mutex           $mutex;
 
     private function __construct()
     {

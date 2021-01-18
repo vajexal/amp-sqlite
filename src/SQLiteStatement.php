@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite;
 
 use Amp\Parallel\Context\StatusError;
@@ -17,14 +19,14 @@ class SQLiteStatement implements Statement
     use SQLiteResultFactory;
 
     private SQLiteDriver $driver;
-    private string $statementId;
-    private string $query;
+    private int          $statementId;
+    private string       $query;
 
-    public function __construct(SQLiteDriver $driver, string $statementId, string $query)
+    public function __construct(SQLiteDriver $driver, int $statementId, string $query)
     {
-        $this->driver = $driver;
+        $this->driver      = $driver;
         $this->statementId = $statementId;
-        $this->query = $query;
+        $this->query       = $query;
     }
 
     public function __destruct()

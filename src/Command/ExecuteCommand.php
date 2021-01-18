@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite\Command;
 
 use Amp\Promise;
@@ -13,11 +15,11 @@ class ExecuteCommand implements Command
     use CommandResponseFactory, StatementBinding;
 
     private string $query;
-    private array $bindings;
+    private array  $bindings;
 
     public function __construct(string $query, array $bindings)
     {
-        $this->query = $query;
+        $this->query    = $query;
         $this->bindings = $bindings;
     }
 

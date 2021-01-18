@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite\Tests;
 
 use Amp\Parallel\Context\Context;

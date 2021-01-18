@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite\Command\Response;
 
 use Throwable;
@@ -12,7 +14,7 @@ class ErrorResponse implements Response
     public function __construct(string $throwable, string $message)
     {
         $this->throwable = $throwable;
-        $this->message = $message;
+        $this->message   = $message;
     }
 
     public function getThrowable(): Throwable

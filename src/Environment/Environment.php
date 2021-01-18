@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite\Environment;
 
 use SQLite3;
@@ -8,7 +10,7 @@ use SQLite3Stmt;
 class Environment
 {
     private SQLite3 $client;
-    private array $statements;
+    private array   $statements;
 
     public function __construct(SQLite3 $client)
     {

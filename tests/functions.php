@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite\Tests;
 
 use ReflectionObject;
@@ -7,7 +9,7 @@ use ReflectionObject;
 function getPrivateProperty(object $object, string $property)
 {
     $reflector = new ReflectionObject($object);
-    $property = $reflector->getProperty($property);
+    $property  = $reflector->getProperty($property);
     $property->setAccessible(true);
     return $property->getValue($object);
 }

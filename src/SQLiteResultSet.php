@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Vajexal\AmpSQLite;
 
 use Amp\Promise;
@@ -9,7 +11,7 @@ use Amp\Success;
 class SQLiteResultSet implements ResultSet
 {
     private array $results;
-    private int $position = -1;
+    private int   $position = -1;
 
     public function __construct(array $results)
     {
