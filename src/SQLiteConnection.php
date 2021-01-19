@@ -30,7 +30,7 @@ class SQLiteConnection implements Link
 
     public function __destruct()
     {
-        $this->close();
+        Promise\rethrow($this->close());
     }
 
     /**
@@ -108,10 +108,11 @@ class SQLiteConnection implements Link
 
     /**
      * @inheritDoc
+     * @return Promise<null>
      */
-    public function close()
+    public function close(): Promise
     {
-        Promise\rethrow(call(function () {
+        return call(function () {
             try {
                 if (!$this->isAlive()) {
                     return;
@@ -123,7 +124,7 @@ class SQLiteConnection implements Link
             } catch (SynchronizationError $e) {
                 // It's ok
             }
-        }));
+        });
     }
 
     /**

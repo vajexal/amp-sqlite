@@ -11,6 +11,7 @@ use Amp\Sql\QueryError;
 use Amp\Sql\Transaction;
 use Amp\Sql\TransactionError;
 use InvalidArgumentException;
+use function Amp\call;
 
 class SQLiteTransaction implements Transaction
 {
@@ -46,7 +47,7 @@ class SQLiteTransaction implements Transaction
      */
     public function query(string $sql): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
@@ -59,7 +60,7 @@ class SQLiteTransaction implements Transaction
      */
     public function prepare(string $sql): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
@@ -72,7 +73,7 @@ class SQLiteTransaction implements Transaction
      */
     public function execute(string $sql, array $params = []): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
@@ -81,12 +82,17 @@ class SQLiteTransaction implements Transaction
 
     /**
      * @inheritDoc
+     * @return Promise<null>
      */
-    public function close()
+    public function close(): Promise
     {
-        if ($this->connection) {
-            Promise\rethrow($this->commit());
-        }
+        return call(function () {
+            if (!$this->isAlive()) {
+                return;
+            }
+
+            yield $this->commit();
+        });
     }
 
     /**
@@ -114,12 +120,14 @@ class SQLiteTransaction implements Transaction
      */
     public function commit(): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
-        $promise          = $this->connection->execute('COMMIT');
+        $promise = $this->connection->execute('COMMIT');
+
         $this->connection = null;
+
         return $promise;
     }
 
@@ -132,12 +140,14 @@ class SQLiteTransaction implements Transaction
      */
     public function rollback(): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
-        $promise          = $this->connection->execute('ROLLBACK');
+        $promise = $this->connection->execute('ROLLBACK');
+
         $this->connection = null;
+
         return $promise;
     }
 
@@ -150,7 +160,7 @@ class SQLiteTransaction implements Transaction
      */
     public function createSavepoint(string $identifier): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
@@ -168,7 +178,7 @@ class SQLiteTransaction implements Transaction
      */
     public function rollbackTo(string $identifier): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 
@@ -186,7 +196,7 @@ class SQLiteTransaction implements Transaction
      */
     public function releaseSavepoint(string $identifier): Promise
     {
-        if (!$this->connection) {
+        if (!$this->isAlive()) {
             throw new TransactionError('Transaction has been closed');
         }
 

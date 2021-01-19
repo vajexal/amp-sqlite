@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Vajexal\AmpSQLite\Tests;
 
 use Amp\Loop;
-use Amp\Sql\ConnectionException;
 use Amp\Sql\QueryError;
 use Amp\Sql\Transaction;
 use Amp\Sql\TransactionError;
@@ -74,7 +73,7 @@ class TransactionTest extends TestCase
             ':bar' => 'test2',
         ]);
         yield $transaction->rollback();
-        $transaction->close(); // Shouldn't throw error
+        yield $transaction->close(); // Shouldn't throw error
 
         /** @var SQLiteResultSet $results */
         $results = yield $connection->query('select * from foo');
@@ -120,7 +119,7 @@ class TransactionTest extends TestCase
         yield $transaction->execute('update foo set bar = :bar', [
             ':bar' => 'test2',
         ]);
-        $transaction->close();
+        yield $transaction->close();
 
         Loop::defer(function () use ($connection) {
             /** @var SQLiteResultSet $results */
@@ -170,8 +169,8 @@ class TransactionTest extends TestCase
 
     public function testUsingTransactionWithClosedConnection()
     {
-        $this->expectException(ConnectionException::class);
-        $this->expectExceptionMessage('Process unexpectedly exited');
+        $this->expectException(TransactionError::class);
+        $this->expectExceptionMessage('Transaction has been closed');
 
         /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
@@ -179,7 +178,7 @@ class TransactionTest extends TestCase
         /** @var SQLiteTransaction $transaction */
         $transaction = yield $connection->beginTransaction();
 
-        $connection->close();
+        yield $connection->close();
 
         yield $transaction->commit();
     }

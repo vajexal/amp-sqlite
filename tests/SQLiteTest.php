@@ -43,7 +43,7 @@ abstract class SQLiteTest extends TestCase
         ]);
         yield $this->compareResultSets([['bar' => 'test']], $results);
 
-        $connection->close();
+        yield $connection->close();
     }
 
     public function testUpdateRowsCount()
@@ -80,7 +80,7 @@ abstract class SQLiteTest extends TestCase
 
         /** @var SQLiteConnection $connection */
         $connection = yield connect(':memory:');
-        $connection->close();
+        yield $connection->close();
         yield $connection->query('select 1');
     }
 
@@ -97,7 +97,7 @@ abstract class SQLiteTest extends TestCase
         /** @var SQLiteStatement $statement */
         $statement = yield $connection->prepare('select * from foo where bar = :bar');
 
-        $connection->close();
+        yield $connection->close();
 
         yield $statement->execute([
             ':bar' => 'test',
