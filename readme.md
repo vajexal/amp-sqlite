@@ -13,6 +13,8 @@ composer require vajexal/amp-sqlite:dev-master
 ```php
 <?php
 
+declare(strict_types=1);
+
 use Amp\Loop;
 use Vajexal\AmpSQLite\SQLiteCommandResult;
 use Vajexal\AmpSQLite\SQLiteConnection;
@@ -53,6 +55,8 @@ Loop::run(function () {
 
 ```php
 <?php
+
+declare(strict_types=1);
 
 use Amp\Loop;
 use Vajexal\AmpSQLite\SQLiteConnection;
