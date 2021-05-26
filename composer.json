@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "ext-parallel": "*",
-        "amphp/php-cs-fixer-config": "dev-master#e8930dcb166f4bcbc8bd3c37e5535bd8960ffea9",
+        "amphp/php-cs-fixer-config": "dev-master",
         "amphp/phpunit-util": "^1.4"
     },
     "autoload": {
