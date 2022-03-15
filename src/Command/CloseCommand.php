@@ -19,7 +19,7 @@ class CloseCommand implements Command
         return call(function () use ($environment) {
             $environment->getClient()->close();
 
-            throw new CloseConnectionException;
+            throw new CloseConnectionException();
         });
     }
 }

@@ -29,7 +29,7 @@ return function (Channel $channel): Generator {
 
             yield $channel->send($response);
         }
-    } catch (CloseConnectionException $e) {
+    } catch (CloseConnectionException) {
         return;
     }
 };

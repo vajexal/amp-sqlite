@@ -7,7 +7,7 @@
     ],
     "license": "Unlicense",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0|^8.1",
         "ext-pcntl": "*",
         "ext-sqlite3": "*",
         "amphp/amp": "^2.5",
@@ -18,7 +18,7 @@
     "require-dev": {
         "ext-parallel": "*",
         "amphp/php-cs-fixer-config": "dev-master",
-        "amphp/phpunit-util": "^1.4"
+        "amphp/phpunit-util": "^2.0"
     },
     "autoload": {
         "psr-4": {

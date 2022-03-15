@@ -13,13 +13,10 @@ class ExecuteCommand implements Command
 {
     use CommandResponseFactory, StatementBinding;
 
-    private string $query;
-    private array  $bindings;
-
-    public function __construct(string $query, array $bindings)
-    {
-        $this->query    = $query;
-        $this->bindings = $bindings;
+    public function __construct(
+        private string $query,
+        private array $bindings
+    ) {
     }
 
     /**

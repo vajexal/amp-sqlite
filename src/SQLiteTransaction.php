@@ -15,11 +15,11 @@ use function Amp\call;
 
 class SQLiteTransaction implements Transaction
 {
-    const ISOLATION_DEFERRED  = 0;
-    const ISOLATION_IMMEDIATE = 1;
-    const ISOLATION_EXCLUSIVE = 2;
+    public const ISOLATION_DEFERRED  = 0;
+    public const ISOLATION_IMMEDIATE = 1;
+    public const ISOLATION_EXCLUSIVE = 2;
 
-    const ISOLATION_MAP = [
+    public const ISOLATION_MAP = [
         self::ISOLATION_DEFERRED  => 'DEFERRED',
         self::ISOLATION_IMMEDIATE => 'IMMEDIATE',
         self::ISOLATION_EXCLUSIVE => 'EXCLUSIVE',
@@ -205,9 +205,6 @@ class SQLiteTransaction implements Transaction
         return $this->connection->execute("RELEASE {$identifier}");
     }
 
-    /**
-     * @param string $identifier
-     */
     private function validateSavepointIdentifier(string $identifier)
     {
         if (!\preg_match('/^[a-zA-Z_]\w*$/', $identifier)) {

@@ -145,7 +145,7 @@ abstract class SQLiteTest extends TestCase
         $driver = getPrivateProperty($connection, 'driver');
 
         /** @var CommandResultResponse $response */
-        $response = yield $driver->send(new GetStatementsCommand);
+        $response = yield $driver->send(new GetStatementsCommand());
 
         $this->assertEquals(0, $response->getAffectedRowCount());
     }

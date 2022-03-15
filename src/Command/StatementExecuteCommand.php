@@ -13,13 +13,10 @@ class StatementExecuteCommand implements Command
 {
     use CommandResponseFactory, StatementBinding;
 
-    private int   $statementId;
-    private array $bindings;
-
-    public function __construct(int $statementId, array $bindings)
-    {
-        $this->statementId = $statementId;
-        $this->bindings    = $bindings;
+    public function __construct(
+        private int $statementId,
+        private array $bindings
+    ) {
     }
 
     /**

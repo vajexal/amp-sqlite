@@ -121,7 +121,7 @@ class SQLiteConnection implements Link
                 yield $this->driver->close();
             } catch (StatusError $e) {
                 throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
-            } catch (SynchronizationError $e) {
+            } catch (SynchronizationError) {
                 // It's ok
             }
         });

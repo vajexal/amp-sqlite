@@ -12,11 +12,9 @@ use function Amp\call;
 
 class PrepareCommand implements Command
 {
-    private string $query;
-
-    public function __construct(string $query)
-    {
-        $this->query = $query;
+    public function __construct(
+        private string $query
+    ) {
     }
 
     /**

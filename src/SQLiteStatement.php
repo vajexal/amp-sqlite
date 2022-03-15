@@ -64,7 +64,7 @@ class SQLiteStatement implements Statement
                 yield $this->driver->send($command);
             } catch (StatusError $e) {
                 throw new ConnectionException($e->getMessage(), $e->getCode(), $e);
-            } catch (SynchronizationError $e) {
+            } catch (SynchronizationError) {
                 // It's ok
             }
         });

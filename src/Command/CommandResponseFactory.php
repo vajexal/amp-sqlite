@@ -11,15 +11,14 @@ use Vajexal\AmpSQLite\Environment\Environment;
 
 trait CommandResponseFactory
 {
-    /**
-     * @param \SQLite3Result|bool $results
-     * @param Environment $environment
-     * @return CommandResultResponse|QueryErrorResponse|ResultSetResponse
-     */
-    private function createQueryResponse($results, Environment $environment)
+    private function createQueryResponse(\SQLite3Result|bool $results, Environment $environment): ResultSetResponse|CommandResultResponse|QueryErrorResponse
     {
         if (!$results) {
             return new QueryErrorResponse($environment->getClient()->lastErrorMsg());
+        }
+
+        if ($results === true) {
+            return new CommandResultResponse($environment->getClient()->changes());
         }
 
         // https://www.php.net/manual/ru/sqlite3result.fetcharray.php#120631

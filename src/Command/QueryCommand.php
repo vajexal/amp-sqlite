@@ -12,11 +12,9 @@ class QueryCommand implements Command
 {
     use CommandResponseFactory;
 
-    private string $query;
-
-    public function __construct(string $query)
-    {
-        $this->query = $query;
+    public function __construct(
+        private string $query
+    ) {
     }
 
     /**

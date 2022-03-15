@@ -16,44 +16,31 @@ use Vajexal\AmpSQLite\Command\Response\StatementResponse;
 trait SQLiteResultFactory
 {
     /**
-     * @param Response $response
-     * @return SQLiteCommandResult|SQLiteResultSet
      * @throws FailureException
      * @throws QueryError
      */
-    private function createQueryResultFromResponse(Response $response)
+    private function createQueryResultFromResponse(Response $response): SQLiteCommandResult|SQLiteResultSet
     {
-        switch (true) {
-            case $response instanceof QueryErrorResponse:
-                throw new QueryError($response->getMessage());
-            case $response instanceof FailureExceptionResponse:
-                throw new FailureException($response->getMessage());
-            case $response instanceof CommandResultResponse:
-                return new SQLiteCommandResult($response->getAffectedRowCount());
-            case $response instanceof ResultSetResponse:
-                return new SQLiteResultSet($response->getResults());
-            default:
-                throw new FailureException('unknown response ' . \get_class($response));
-        }
+        return match (true) {
+            $response instanceof QueryErrorResponse => throw new QueryError($response->getMessage()),
+            $response instanceof FailureExceptionResponse => throw new FailureException($response->getMessage()),
+            $response instanceof CommandResultResponse => new SQLiteCommandResult($response->getAffectedRowCount()),
+            $response instanceof ResultSetResponse => new SQLiteResultSet($response->getResults()),
+            default => throw new FailureException('unknown response ' . \get_class($response)),
+        };
     }
 
     /**
-     * @param Response $response
-     * @return SQLiteStatement
      * @throws FailureException
      * @throws QueryError
      */
     private function createStatementFromResponse(Response $response): SQLiteStatement
     {
-        switch (true) {
-            case $response instanceof QueryErrorResponse:
-                throw new QueryError($response->getMessage());
-            case $response instanceof FailureExceptionResponse:
-                throw new FailureException($response->getMessage());
-            case $response instanceof StatementResponse:
-                return new SQLiteStatement($this->driver, $response->getStatementId(), $response->getQuery());
-            default:
-                throw new FailureException('unknown response ' . \get_class($response));
-        }
+        return match (true) {
+            $response instanceof QueryErrorResponse => throw new QueryError($response->getMessage()),
+            $response instanceof FailureExceptionResponse => throw new FailureException($response->getMessage()),
+            $response instanceof StatementResponse => new SQLiteStatement($this->driver, $response->getStatementId(), $response->getQuery()),
+            default => throw new FailureException('unknown response ' . \get_class($response)),
+        };
     }
 }

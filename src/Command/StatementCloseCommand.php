@@ -12,11 +12,9 @@ use function Amp\call;
 
 class StatementCloseCommand implements Command
 {
-    private int $statementId;
-
-    public function __construct(int $statementId)
-    {
-        $this->statementId = $statementId;
+    public function __construct(
+        private int $statementId
+    ) {
     }
 
     /**
@@ -35,7 +33,7 @@ class StatementCloseCommand implements Command
 
             $environment->removeStatement($this->statementId);
 
-            return new SuccessResponse;
+            return new SuccessResponse();
         });
     }
 }

@@ -6,15 +6,11 @@ namespace Vajexal\AmpSQLite;
 
 class OpenConnectionRequest
 {
-    private string $filename;
-    private int    $flags;
-    private string $encryptionKey;
-
-    public function __construct(string $filename, int $flags, string $encryptionKey)
-    {
-        $this->filename      = $filename;
-        $this->flags         = $flags;
-        $this->encryptionKey = $encryptionKey;
+    public function __construct(
+        private string $filename,
+        private int $flags,
+        private string $encryptionKey
+    ) {
     }
 
     public function getFilename(): string

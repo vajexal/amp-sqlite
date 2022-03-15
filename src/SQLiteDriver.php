@@ -27,7 +27,7 @@ class SQLiteDriver implements TransientResource
 
     private function __construct()
     {
-        $this->mutex = new LocalMutex;
+        $this->mutex = new LocalMutex();
     }
 
     public function __destruct()
@@ -36,15 +36,12 @@ class SQLiteDriver implements TransientResource
     }
 
     /**
-     * @param string $filename
-     * @param int|null $flags
-     * @param string|null $encryptionKey
      * @return Promise<self>
      */
-    public static function create(string $filename, int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, string $encryptionKey = ''): Promise
+    public static function create(string $filename, ?int $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, ?string $encryptionKey = ''): Promise
     {
         return call(function () use ($filename, $flags, $encryptionKey) {
-            $driver = new self;
+            $driver = new self();
 
             $driver->context = yield Context\run(__DIR__ . DIRECTORY_SEPARATOR . 'sqlite-worker.php');
             $request = new OpenConnectionRequest($filename, $flags, $encryptionKey);
@@ -57,7 +54,6 @@ class SQLiteDriver implements TransientResource
     }
 
     /**
-     * @param Command $command
      * @return Promise<Response>
      */
     public function send(Command $command): Promise
@@ -86,12 +82,12 @@ class SQLiteDriver implements TransientResource
                 return;
             }
 
-            $command = new CloseCommand;
+            $command = new CloseCommand();
             yield $this->context->send($command);
 
             try {
                 yield Promise\timeout($this->context->join(), self::CONTEXT_CLOSE_TIMEOUT);
-            } catch (TimeoutException $e) {
+            } catch (TimeoutException) {
                 $this->context->kill();
             }
         });

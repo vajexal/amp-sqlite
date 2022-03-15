@@ -6,11 +6,9 @@ namespace Vajexal\AmpSQLite\Command\Response;
 
 class CommandResultResponse implements Response
 {
-    private int $affectedRowCount;
-
-    public function __construct(int $affectedRowCount)
-    {
-        $this->affectedRowCount = $affectedRowCount;
+    public function __construct(
+        private int $affectedRowCount
+    ) {
     }
 
     public function getAffectedRowCount(): int

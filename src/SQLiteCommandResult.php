@@ -8,11 +8,9 @@ use Amp\Sql\CommandResult;
 
 class SQLiteCommandResult implements CommandResult
 {
-    private int $affectedRowCount;
-
-    public function __construct(int $affectedRowCount)
-    {
-        $this->affectedRowCount = $affectedRowCount;
+    public function __construct(
+        private int $affectedRowCount
+    ) {
     }
 
     /**
